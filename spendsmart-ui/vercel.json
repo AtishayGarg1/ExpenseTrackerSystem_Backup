@@ -1,0 +1,15 @@
+{
+  "build": {
+    "env": {
+      "OUTPUT_DIRECTORY": "dist/spendsmart-ui/browser"
+    }
+  },
+  "outputDirectory": "dist/spendsmart-ui/browser",
+  "framework": "angular",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

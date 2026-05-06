@@ -1,0 +1,277 @@
+<div class="app-container">
+    <main class="main-content standalone-view">
+        <header style="margin-bottom: 48px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 8px;">Account Settings</h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem;">Manage your profile, preferences, and security.
+                </p>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 24px;">
+                <button *ngIf="isAdmin" class="btn-primary" routerLink="/admin"
+                    style="padding: 10px 24px; background: #636e72; border: none;">🛡️ Admin Panel</button>
+                <button class="btn-primary" routerLink="/dashboard" style="padding: 10px 24px;">🏠 Dashboard</button>
+
+                <div class="user-menu-container">
+                    <div class="user-profile-widget" (click)="showUserMenu = !showUserMenu">
+                        <div class="avatar">
+                            {{ getInitials(user?.fullName || user?.FullName) }}
+                        </div>
+                        <div class="user-info">
+                            <p class="name">{{ user?.fullName || user?.FullName || 'User' }}</p>
+                        </div>
+                        <span class="chevron">▼</span>
+                    </div>
+
+                    <!-- Premium Dropdown Menu -->
+                    <div class="user-dropdown-menu" *ngIf="showUserMenu">
+                        <a routerLink="/settings" class="dropdown-item">
+                            <span class="icon">⚙️</span> Settings
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a (click)="logout()" class="dropdown-item text-danger">
+                            <span class="icon">🚪</span> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="settings-layout">
+
+            <!-- Side Navigation Tabs -->
+            <nav class="settings-nav">
+                <button class="nav-tab" [class.active]="activeTab === 'profile'" (click)="activeTab = 'profile'">
+                    <span class="tab-icon">👤</span>
+                    <div class="tab-info">
+                        <p class="tab-title">Personal Info</p>
+                        <p class="tab-desc">Name, email</p>
+                    </div>
+                    <span class="tab-arrow">›</span>
+                </button>
+                <button class="nav-tab" [class.active]="activeTab === 'preferences'"
+                    (click)="activeTab = 'preferences'">
+                    <span class="tab-icon">🌍</span>
+                    <div class="tab-info">
+                        <p class="tab-title">Preferences</p>
+                        <p class="tab-desc">Currency</p>
+                    </div>
+                    <span class="tab-arrow">›</span>
+                </button>
+                <button class="nav-tab" [class.active]="activeTab === 'security'" (click)="activeTab = 'security'">
+                    <span class="tab-icon">🔒</span>
+                    <div class="tab-info">
+                        <p class="tab-title">Security</p>
+                        <p class="tab-desc">Password & access</p>
+                    </div>
+                    <span class="tab-arrow">›</span>
+                </button>
+                <button class="nav-tab" [class.active]="activeTab === 'categories'" (click)="activeTab = 'categories'">
+                    <span class="tab-icon">📁</span>
+                    <div class="tab-info">
+                        <p class="tab-title">Categories</p>
+                        <p class="tab-desc">Manage spending types</p>
+                    </div>
+                    <span class="tab-arrow">›</span>
+                </button>
+                <button class="nav-tab danger-tab-trigger" [class.active]="activeTab === 'danger'"
+                    (click)="activeTab = 'danger'">
+                    <span class="tab-icon">🗑️</span>
+                    <div class="tab-info">
+                        <p class="tab-title">Delete Account</p>
+                        <p class="tab-desc">Permanently close account</p>
+                    </div>
+                    <span class="tab-arrow">›</span>
+                </button>
+            </nav>
+
+            <!-- Panel Content -->
+            <div class="settings-panel">
+
+                <!-- Profile Panel -->
+                <div *ngIf="activeTab === 'profile'" class="panel-content">
+                    <div class="panel-header">
+                        <span class="panel-icon">👤</span>
+                        <div>
+                            <h2>Personal Information</h2>
+                            <p>Update your name</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" [(ngModel)]="user.fullName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" [value]="user.email" disabled class="disabled-input">
+                        <span class="hint">Email cannot be changed.</span>
+                    </div>
+                    <button class="btn btn-primary" (click)='updateProfile()' [disabled]="isSaving">
+                        {{ isSaving ? 'Saving...' : 'Save Changes' }}
+                    </button>
+                </div>
+
+                <!-- Preferences Panel -->
+                <div *ngIf="activeTab === 'preferences'" class="panel-content">
+                    <div class="panel-header">
+                        <span class="panel-icon">🌍</span>
+                        <div>
+                            <h2>Preferences</h2>
+                            <p>Set your default currency and regional settings.</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Currency</label>
+                        <select [(ngModel)]="user.currency" (change)="updateCurrency()">
+                            <option value="INR">INR — Indian Rupee ₹</option>
+                            <option value="USD">USD — US Dollar $</option>
+                            <option value="GBP">GBP — British Pound £</option>
+                            <option value="EUR">EUR — Euro €</option>
+                            <option value="AED">AED — UAE Dirham د.إ</option>
+                            <option value="JPY">JPY — Japanese Yen ¥</option>
+                        </select>
+                        <span class="hint">Used as the default currency for all new expenses and reports.</span>
+                    </div>
+                </div>
+
+                <!-- Security Panel -->
+                <div *ngIf="activeTab === 'security'" class="panel-content">
+                    <div class="panel-header">
+                        <span class="panel-icon">🔒</span>
+                        <div>
+                            <h2>Change Password</h2>
+                            <p>Keep your account safe with a strong password.</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" [(ngModel)]="passwordData.oldPassword"
+                            placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" [(ngModel)]="passwordData.newPassword" placeholder="Enter new password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" [(ngModel)]="passwordData.confirmPassword"
+                            placeholder="Repeat new password">
+                    </div>
+                    <button class="btn btn-outline" (click)="changePassword()">Update Password</button>
+                </div>
+
+                <!-- Categories Panel -->
+                <div *ngIf="activeTab === 'categories'" class="panel-content">
+                    <div class="panel-header">
+                        <span class="panel-icon">📁</span>
+                        <div>
+                            <h2>Manage Categories</h2>
+                            <p>Customize your income and expense categories.</p>
+                        </div>
+                    </div>
+
+                    <!-- Categories List -->
+                    <div class="categories-grid">
+                        <div *ngFor="let cat of categories" class="category-card" [style.border-left-color]="cat.color"
+                            style="border-left-width: 4px;">
+                            <div class="cat-icon-wrap">
+                                {{cat.icon}}
+                            </div>
+                            <div class="cat-info">
+                                <p class="cat-name">{{cat.name}}</p>
+                                <span class="cat-type-badge" [class.expense]="cat.type === 'EXPENSE'"
+                                    [class.income]="cat.type === 'INCOME'">
+                                    {{cat.type}}
+                                </span>
+                            </div>
+                            <button class="btn-delete-cat" (click)="deleteCategory(cat.categoryId)"
+                                title="Delete Category">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Add Category Form -->
+                    <div class="add-category-inner">
+                        <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.1rem; color: #f1f5f9;">Add New
+                            Category</h3>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label>Category Name</label>
+                                <input type="text" [(ngModel)]="categoryForm.name" placeholder="e.g. Hobbies">
+                            </div>
+                            <div class="form-group">
+                                <label>Category Type</label>
+                                <select [(ngModel)]="categoryForm.type">
+                                    <option value="EXPENSE">Expense</option>
+                                    <option value="INCOME">Income</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label>Icon (Emoji)</label>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" [(ngModel)]="categoryForm.icon" placeholder="e.g. 🎮"
+                                        maxlength="2" style="width: 80px; text-align: center; font-size: 1.5rem;">
+                                    <p
+                                        style="margin: 0; color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center;">
+                                        Choose from list or type your own</p>
+                                </div>
+                                <div class="emoji-picker custom-scrollbar">
+                                    <span *ngFor="let emoji of emojiList" class="emoji-item"
+                                        [class.selected]="categoryForm.icon === emoji"
+                                        (click)="categoryForm.icon = emoji">
+                                        {{emoji}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" (click)="saveCategory()"
+                            [disabled]="isSaving || !categoryForm.name" style="margin-top: 1rem;">
+                            {{ isSaving ? 'Creating...' : 'Create Category' }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Danger Zone Panel -->
+                <div *ngIf="activeTab === 'danger'" class="panel-content danger-zone-content">
+                    <div class="panel-header">
+                        <span class="panel-icon"
+                            style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3);">🗑️</span>
+                        <div>
+                            <h2 class="text-danger">Delete Account</h2>
+                            <p>This action is permanent and cannot be undone.</p>
+                        </div>
+                    </div>
+
+                    <div class="danger-box" style="padding: 24px; border: 1px solid rgba(239, 68, 68, 0.33); border-radius: 12px; background: rgba(239, 68, 68, 0.05);">
+                        <h3 style="color: #f87171; margin-top: 0; font-size: 1.1rem;">Delete My Account</h3>
+                        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 24px;">
+                            Once you delete your account, there is no going back. All your records will be <strong>permanently removed</strong>.
+                        </p>
+                        
+                        <!-- PASSWORD INPUT - MUST BE VISIBLE -->
+                        <div style="margin-bottom: 24px; display: block;">
+                            <label style="color: #f87171; display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">
+                                Confirm Password to Proceed
+                            </label>
+                            <input type="password" [(ngModel)]="deleteAccountPassword" 
+                                   placeholder="Enter your current password"
+                                   style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(0,0,0,0.3); color: white; display: block;">
+                        </div>
+
+                        <button class="btn btn-danger" (click)="onDeleteAccount()" 
+                                [disabled]="!deleteAccountPassword"
+                                style="width: 100%; padding: 14px; font-weight: 700; background: #ef4444; border: none; color: white; border-radius: 8px; cursor: pointer;">
+                            DELETE MY ACCOUNT PERMANENTLY
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

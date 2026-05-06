@@ -1,0 +1,249 @@
+<div class="admin-panel">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <h2 class="gradient-text">SpendSmart</h2>
+            <p>Admin Control</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a (click)="switchTab('dashboard')" [class.active]="activeTab === 'dashboard'">
+                <span>📊</span> Dashboard
+            </a>
+            <a (click)="switchTab('users')" [class.active]="activeTab === 'users'">
+                <span>👥</span> Users
+            </a>
+            <a (click)="switchTab('expenses')" [class.active]="activeTab === 'expenses'">
+                <span>💸</span> All Expenses
+            </a>
+            <a (click)="switchTab('incomes')" [class.active]="activeTab === 'incomes'">
+                <span>💰</span> All Incomes
+            </a>
+
+            <a (click)="switchTab('logs')" [class.active]="activeTab === 'logs'">
+                <span>📋</span> Audit Logs
+            </a>
+            <a (click)="switchTab('settings')" [class.active]="activeTab === 'settings'" style="margin-top: 1rem;">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a (click)="logout()">← Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main-content">
+        <header class="content-header">
+            <div class="header-title">
+                <h1>{{activeTab | titlecase}}</h1>
+                <p class="subtitle" *ngIf="activeTab === 'dashboard'">Overview of platform metrics</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-refresh" (click)="loadTabData()">
+                    <span class="icon">↻</span> Refresh Data
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Tab -->
+        <div *ngIf="activeTab === 'dashboard'" class="tab-content">
+            <div class="analytics-grid">
+                <div class="glass-card stat-card hover-lift">
+                    <div class="stat-icon users-icon">👥</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value">{{analytics?.totalUsers || analytics?.TotalUsers || 0}}</div>
+                </div>
+                <div class="glass-card stat-card hover-lift">
+                    <div class="stat-icon volume-icon">💳</div>
+                    <div class="stat-label">Platform Volume</div>
+                    <div class="stat-value highlight-text">${{(analytics?.totalExpenses || analytics?.TotalExpenses || 0) | number:'1.2-2'}}</div>
+                    <p class="stat-desc">Aggregated Spending</p>
+                </div>
+                <div class="glass-card stat-card hover-lift">
+                    <div class="stat-icon income-icon">💰</div>
+                    <div class="stat-label">Total Income</div>
+                    <div class="stat-value success-text">${{(analytics?.totalIncome || analytics?.TotalIncome || 0) | number:'1.2-2'}}</div>
+                    <p class="stat-desc">Total Revenue Recorded</p>
+                </div>
+                <div class="glass-card stat-card hover-lift">
+                    <div class="stat-icon status-icon">⚡</div>
+                    <div class="stat-label">System Status</div>
+                    <div class="stat-value status-healthy">{{analytics?.platformStatus || analytics?.PlatformStatus || 'Healthy'}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div *ngIf="activeTab === 'users'" class="tab-content">
+            <div class="glass-card">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">{{user.fullName[0]}}</div>
+                                    <div class="info">
+                                        <p class="name">{{user.fullName}}</p>
+                                        <p class="email">{{user.email}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge role">{{user.role}}</span></td>
+                            <td>
+                                <span class="badge" [class.active]="user.isActive" [class.suspended]="!user.isActive">
+                                    {{user.isActive ? 'Active' : 'Suspended'}}
+                                </span>
+                            </td>
+                            <td>{{user.createdAt | date:'shortDate'}}</td>
+                            <td>
+                                <div class="action-buttons" *ngIf="user.role !== 'Admin' && user.role !== 'admin'">
+                                    <button *ngIf="user.isActive" (click)="suspendUser(user.userId)" title="Suspend">🚫</button>
+                                    <button *ngIf="!user.isActive" (click)="unsuspendUser(user.userId)" title="Unsuspend">✅</button>
+                                    <button (click)="deleteUser(user.userId)" title="Delete">🗑️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Expenses Tab -->
+        <div *ngIf="activeTab === 'expenses'" class="tab-content">
+            <div class="glass-card">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let exp of expenses">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">{{exp.userName[0]}}</div>
+                                    <div class="info">
+                                        <p class="name">{{exp.userName}}</p>
+                                        <p class="email">{{exp.userEmail}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="danger">${{exp.amount}}</td>
+                            <td>{{exp.description}}</td>
+                            <td>{{exp.date | date:'medium'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Incomes Tab -->
+        <div *ngIf="activeTab === 'incomes'" class="tab-content">
+            <div class="glass-card">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Source</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let inc of incomes">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">{{inc.userName[0]}}</div>
+                                    <div class="info">
+                                        <p class="name">{{inc.userName}}</p>
+                                        <p class="email">{{inc.userEmail}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{inc.source}}</td>
+                            <td class="success">${{inc.amount}}</td>
+                            <td>{{inc.date | date:'medium'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+        <!-- Audit Logs Tab -->
+        <div *ngIf="activeTab === 'logs'" class="tab-content">
+            <div class="logs-grid">
+                <div *ngFor="let log of auditLogs" class="log-card glass-card">
+                    <div class="log-header">
+                        <span class="log-action">{{log.action}}</span>
+                        <span class="log-time">{{log.timestamp | date:'medium'}}</span>
+                    </div>
+                    <div class="log-body">
+                        <p><strong>Actor:</strong> {{log.actor}}</p>
+                        <p class="log-data">{{log.data}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div *ngIf="activeTab === 'settings'" class="tab-content">
+            <div class="glass-card" style="max-width: 600px; margin-bottom: 24px;">
+                <div class="panel-header" style="margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;">
+                    <h2>Admin Profile</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Update your display name.</p>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Full Name</label>
+                    <input type="text" [(ngModel)]="adminProfile.fullName" placeholder="Enter full name"
+                           style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
+                </div>
+                <button class="btn-primary" (click)="updateAdminProfile()" [disabled]="isSaving || !adminProfile.fullName"
+                        style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    {{ isSaving ? 'Updating...' : 'Update Profile' }}
+                </button>
+            </div>
+
+            <div class="glass-card" style="max-width: 600px;">
+                <div class="panel-header" style="margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;">
+                    <h2>Admin Security</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Change your platform administrator password.</p>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Current Password</label>
+                    <input type="password" [(ngModel)]="passwordData.oldPassword" placeholder="Enter current password"
+                           style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">New Password</label>
+                    <input type="password" [(ngModel)]="passwordData.newPassword" placeholder="Enter new password"
+                           style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
+                </div>
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Confirm New Password</label>
+                    <input type="password" [(ngModel)]="passwordData.confirmPassword" placeholder="Repeat new password"
+                           style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
+                </div>
+                <button class="btn-primary" (click)="changePassword()" [disabled]="isSaving || !passwordData.oldPassword || !passwordData.newPassword"
+                        style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    {{ isSaving ? 'Updating...' : 'Update Password' }}
+                </button>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,159 @@
+<div class="app-container">
+
+  <app-sidebar></app-sidebar>
+
+  <main class="main-content">
+    <header style="margin-bottom: 48px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 8px;">Overview</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Welcome back! Here's your financial heartbeat today.</p>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 24px;">
+        <button *ngIf="isAdmin" class="btn-primary" routerLink="/admin"
+          style="padding: 10px 24px; background: #636e72; border: none;">🛡️ Admin Panel</button>
+        <button class="btn-primary" routerLink="/expenses" style="padding: 10px 24px;">+ Add Expense</button>
+
+        <div class="user-menu-container">
+          <div class="user-profile-widget" (click)="showUserMenu = !showUserMenu">
+            <div class="avatar">
+              {{ getInitials(user?.fullName || user?.FullName) }}
+            </div>
+            <div class="user-info">
+              <p class="name">{{ user?.fullName || user?.FullName || 'User' }}</p>
+            </div>
+            <span class="chevron">▼</span>
+          </div>
+
+          <!-- Premium Dropdown Menu -->
+          <div class="user-dropdown-menu" *ngIf="showUserMenu">
+            <a routerLink="/settings" class="dropdown-item">
+              <span class="icon">⚙️</span> Settings
+            </a>
+            <hr class="dropdown-divider">
+            <a (click)="logout()" class="dropdown-item text-danger">
+              <span class="icon">🚪</span> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Base Grid Layout -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px;">
+      <div class="glass-card summary-card" style="border-left: 4px solid var(--success-color);">
+        <p
+          style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
+          Total Income</p>
+        <h2 style="font-size: 2rem; color: var(--success-color);">{{ totalIncome | currency:'INR' }}</h2>
+      </div>
+
+      <div class="glass-card summary-card" style="border-left: 4px solid var(--danger-color);">
+        <p
+          style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
+          Total Expenses</p>
+        <h2 style="font-size: 2rem; color: var(--danger-color);">{{ totalExpense | currency:'INR' }}</h2>
+      </div>
+
+      <div class="glass-card summary-card" [style.border-left]="'4px solid rgb(' + getSavingsStatus().color + ')'"
+        [style.box-shadow]="'0 0 20px rgba(' + getSavingsStatus().color + ', 0.15)'">
+        <p
+          style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
+          Savings Rate</p>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 style="font-size: 2rem;" [style.color]="'rgb(' + getSavingsStatus().color + ')'">{{ savingsRate }}%</h2>
+          <span [style.background]="'rgba(' + getSavingsStatus().color + ', 0.2)'"
+            [style.color]="'rgb(' + getSavingsStatus().color + ')'"
+            style="padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;"
+            [style.border]="'1px solid rgba(' + getSavingsStatus().color + ', 0.33)'">
+            {{ getSavingsStatus().label }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 32px;">
+
+      <!-- TRANSACTION FEED -->
+      <div class="glass-card" style="padding: 0; display: flex; flex-direction: column;">
+        <div
+          style="padding: 24px 32px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="font-size: 1.3rem;">Recent Transactions</h3>
+          <a routerLink="/expenses"
+            style="color: var(--accent-light); text-decoration: none; font-size: 0.9rem; font-weight: 600;">View History
+            →</a>
+        </div>
+
+        <div style="padding: 12px 32px; flex: 1; max-height: 450px; overflow-y: auto;">
+          <div *ngIf="expenses.length === 0" style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;">💸</div>
+            <p style="color: var(--text-muted); font-size: 1rem;">No transactions recorded. Start logging!</p>
+          </div>
+
+          <div *ngFor="let expense of expenses | slice:0:10" class="list-row"
+            style="display: flex; justify-content: space-between; align-items: center; padding: 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.03);">
+            <div style="display: flex; align-items: center; gap: 20px;">
+              <div [style.background]="getCategoryColor(expense.categoryId) + '22'"
+                [style.color]="getCategoryColor(expense.categoryId)"
+                style="width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;"
+                [style.border]="'1px solid ' + getCategoryColor(expense.categoryId) + '33'">
+                {{ getCategoryIcon(expense.categoryId) }}
+              </div>
+              <div>
+                <p style="font-weight: 600; font-size: 1.05rem;">{{ expense.description }}</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">{{ expense.paymentMode }} • {{ expense.date |
+                  date:'mediumDate' }}</p>
+              </div>
+            </div>
+            <p style="font-weight: 700; color: var(--danger-color); font-size: 1.1rem;">-{{ expense.amount |
+              currency:'INR' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUDGET WIDGET -->
+      <div class="glass-card" style="padding: 0; display: flex; flex-direction: column;">
+        <div
+          style="padding: 24px 32px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="font-size: 1.3rem;">Active Budgets</h3>
+          <a routerLink="/budgets"
+            style="color: var(--accent-light); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Manage →</a>
+        </div>
+
+        <div style="padding: 24px 32px; flex: 1; max-height: 450px; overflow-y: auto;">
+          <div *ngIf="budgets.length === 0" style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;">🎯</div>
+            <p style="color: var(--text-muted); font-size: 1rem;">No budget goals found. Set a target!</p>
+          </div>
+
+          <div *ngFor="let b of budgets" style="margin-bottom: 28px;" class="list-row">
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <p style="font-weight: 600; font-size: 1.05rem;">{{ b.name }}</p>
+                <p
+                  style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+                  {{ b.period }} Limit</p>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-weight: 700; font-size: 1rem;"
+                  [style.color]="getBarColor(b.spentAmount, b.limitAmount)">{{ b.spentAmount | currency:'INR' }}</span>
+                <span style="font-size: 0.85rem; color: var(--text-muted);"> / {{ b.limitAmount | currency:'INR'
+                  }}</span>
+              </div>
+            </div>
+
+            <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; overflow: hidden;">
+              <div
+                style="height: 100%; transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 4px;"
+                [style.width]="getPercentage(b.spentAmount, b.limitAmount) + '%'"
+                [style.background]="getBarColor(b.spentAmount, b.limitAmount)"
+                [style.box-shadow]="'0 0 12px ' + getBarColor(b.spentAmount, b.limitAmount) + '66'">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

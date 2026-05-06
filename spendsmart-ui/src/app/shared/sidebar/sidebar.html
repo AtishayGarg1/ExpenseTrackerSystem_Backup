@@ -1,0 +1,33 @@
+<aside class="sidebar-container">
+  <div class="brand-section">
+    <div class="brand-logo">S</div>
+    <h2 class="gradient-text">SpendSmart</h2>
+  </div>
+  
+  <nav class="nav-links">
+    <a class="nav-item" routerLink="/dashboard" routerLinkActive="active">
+      <span class="icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" routerLink="/expenses" routerLinkActive="active">
+      <span class="icon">💸</span> Expenses
+    </a>
+    <a class="nav-item" routerLink="/income" routerLinkActive="active">
+      <span class="icon">💰</span> Income
+    </a>
+    <a class="nav-item" routerLink="/budgets" routerLinkActive="active">
+      <span class="icon">🎯</span> Budgets
+    </a>
+    <a *ngIf="isAdmin" class="nav-item admin-link" routerLink="/admin" routerLinkActive="active" style="margin-top: 10px; color: #a29bfe;">
+      <span class="icon">🛡️</span> Admin Panel
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="balance-card">
+      <p class="label">Net Balance</p>
+      <h3 class="amount" [style.color]="netBalance >= 0 ? 'var(--success-color)' : 'var(--danger-color)'">
+        {{ netBalance | currency:'INR' }}
+      </h3>
+    </div>
+  </div>
+</aside>

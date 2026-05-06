@@ -1,0 +1,80 @@
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-color);">
+  <div class="glass-card" style="width: 100%; max-width: 400px; padding: 40px; margin: 20px;">
+    
+    <!-- Back to Home -->
+    <div style="margin-bottom: 24px;">
+      <a routerLink="/" style="display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.9rem; text-decoration: none; transition: color 0.2s ease;"
+         onmouseover="this.style.color='white'" onmouseout="this.style.color=''">
+        ← Back to Home
+      </a>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h2 style="background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem;">SpendSmart</h2>
+      <p style="color: var(--text-muted); margin-top: 8px;">
+        {{ isLoginMode ? 'Welcome back. Please login to your account.' : 'Join us. Create your new account.' }}
+      </p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      
+      <!-- Full Name (Only for Registration) -->
+      <div *ngIf="!isLoginMode" style="margin-bottom: 20px;">
+        <label style="display: block; color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">Full Name</label>
+        <input type="text" class="glass-input" [(ngModel)]="fullName" name="fullName" required placeholder="John Doe">
+      </div>
+
+      <!-- Email Field -->
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">Email Address</label>
+        <input type="email" class="glass-input" [(ngModel)]="email" name="email" required placeholder="you@example.com">
+      </div>
+      
+      <!-- Password Field -->
+      <div style="margin-bottom: 20px;">
+         <label style="display: block; color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">Password</label>
+         <input type="password" class="glass-input" [(ngModel)]="password" name="password" required placeholder="••••••••">
+      </div>
+
+      <!-- Confirm Password Field (Only for Registration) -->
+      <div *ngIf="!isLoginMode" style="margin-bottom: 20px;">
+         <label style="display: block; color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">Confirm Password</label>
+         <input type="password" class="glass-input" [(ngModel)]="confirmPassword" name="confirmPassword" required placeholder="••••••••">
+      </div>
+
+      <!-- Preferred Currency (Only for Registration) -->
+      <div *ngIf="!isLoginMode" style="margin-bottom: 32px;">
+        <label style="display: block; color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">Preferred Currency</label>
+        <select class="glass-input" [(ngModel)]="preferredCurrency" name="preferredCurrency" required>
+          <option value="INR">INR (₹)</option>
+          <option value="USD">USD ($)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="EUR">EUR (€)</option>
+        </select>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" style="color: var(--danger-color); font-size: 0.875rem; margin-bottom: 16px; text-align: center;">
+         {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-primary" style="width: 100%; margin-bottom: 24px;" [disabled]="!loginForm.valid || isLoading">
+         <span *ngIf="isLoading">{{ isLoginMode ? 'Authenticating...' : 'Registering...' }}</span>
+         <span *ngIf="!isLoading">{{ isLoginMode ? 'Sign In' : 'Sign Up' }}</span>
+      </button>
+
+      <!-- Toggle Link -->
+      <div style="text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+        <p *ngIf="isLoginMode">
+          Don't have an account? <a href="javascript:void(0)" (click)="toggleMode()" style="color: var(--accent-light); font-weight: 600; text-decoration: none;">Register here</a>
+        </p>
+        <p *ngIf="!isLoginMode">
+          Already have an account? <a href="javascript:void(0)" (click)="toggleMode()" style="color: var(--accent-light); font-weight: 600; text-decoration: none;">Login here</a>
+        </p>
+      </div>
+
+    </form>
+    
+  </div>
+</div>
