@@ -1,0 +1,43 @@
+## .NET Core
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+*.swp
+*.bak
+*.tmp
+*.log
+
+## User-specific files
+.idea/
+.DS_Store
+Thumbs.db
+
+## Node.js / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+
+## Environment / Secrets
+appsettings.Development.json
+*.pfx
+*.certificate
+*.secret
+.env
+.env.*
+
+## Entity Framework
+Migrations/
+*.db
+*.sqlite
+
+## OS generated files
+[Dd]esktop.ini
+$RECYCLE.BIN/
