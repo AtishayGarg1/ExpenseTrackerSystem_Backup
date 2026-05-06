@@ -20,7 +20,7 @@ export interface Expense {
   providedIn: 'root'
 })
 export class ExpenseService {
-  private apiUrl = environment.apiUrl + '/';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -44,5 +44,6 @@ export class ExpenseService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
+
 
 

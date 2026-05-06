@@ -19,7 +19,7 @@ export interface Income {
   providedIn: 'root'
 })
 export class IncomeService {
-  private apiUrl = environment.apiUrl + '/';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -47,5 +47,6 @@ export class IncomeService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
+
 
 

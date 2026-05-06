@@ -15,7 +15,7 @@ export interface Category {
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl = environment.apiUrl + '/';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -31,5 +31,6 @@ export class CategoryService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
+
 
 

@@ -21,7 +21,7 @@ export interface Budget {
   providedIn: 'root'
 })
 export class BudgetService {
-  private apiUrl = environment.apiUrl + '/';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -41,5 +41,6 @@ export class BudgetService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
+
 
 
