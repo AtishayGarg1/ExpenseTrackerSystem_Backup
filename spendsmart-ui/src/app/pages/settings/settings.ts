@@ -7,12 +7,7 @@ import { AuthService } from '../../auth.service';
 import { Sidebar } from '../../shared/sidebar/sidebar';
 import { CategoryService, Category } from '../../category.service';
 import { BudgetService } from '../../budget.service';
-import { environment } from '../../../../environments/environment';
-import { RouterLink, Router } from '@angular/router';
-import { AuthService } from '../../auth.service';
-import { Sidebar } from '../../shared/sidebar/sidebar';
-import { CategoryService, Category } from '../../category.service';
-import { BudgetService } from '../../budget.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -170,3 +165,4 @@ export class SettingsComponent implements OnInit {
     return this.authService.getInitials(name);
   }
 }
+

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin',
@@ -141,3 +141,4 @@ export class AdminComponent implements OnInit {
       });
   }
 }
+
