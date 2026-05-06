@@ -1,0 +1,18 @@
+<Solution>
+  <Project Path="SpendSmart.Auth.API/SpendSmart.Auth.API.csproj" />
+  <Project Path="SpendSmart.Budget.API/SpendSmart.Budget.API.csproj" />
+  <Project Path="SpendSmart.Category.API/SpendSmart.Category.API.csproj" />
+  <Project Path="SpendSmart.Expense.API/SpendSmart.Expense.API.csproj" />
+  <Project Path="SpendSmart.Gateway/SpendSmart.Gateway.csproj" />
+  <Project Path="SpendSmart.Income.API/SpendSmart.Income.API.csproj" />
+  <Project Path="SpendSmart.Notification.API/SpendSmart.Notification.API.csproj" />
+  <Project Path="SpendSmart.Report.API/SpendSmart.Report.API.csproj" />
+  <Project Path="SpendSmart.Shared/SpendSmart.Shared.csproj" />
+  <Project Path="tests/SpendSmart.Auth.API.Tests/SpendSmart.Auth.API.Tests.csproj" />
+  <Project Path="tests/SpendSmart.Budget.API.Tests/SpendSmart.Budget.API.Tests.csproj" />
+  <Project Path="tests/SpendSmart.Category.API.Tests/SpendSmart.Category.API.Tests.csproj" />
+  <Project Path="tests/SpendSmart.Expense.API.Tests/SpendSmart.Expense.API.Tests.csproj" />
+  <Project Path="tests/SpendSmart.Income.API.Tests/SpendSmart.Income.API.Tests.csproj" />
+  <Project Path="tests/SpendSmart.Notification.API.Tests/SpendSmart.Notification.API.Tests.csproj" />
+  <Project Path="tests/SpendSmart.Report.API.Tests/SpendSmart.Report.API.Tests.csproj" />
+</Solution>

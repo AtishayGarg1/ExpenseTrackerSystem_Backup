@@ -1,0 +1,126 @@
+services:
+  # ─── API Gateway ───────────────────────────────────────────
+  - type: web
+    name: spendsmart-gateway
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Gateway/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: AllowedOrigin
+        sync: false  # Set to your Vercel URL after deploy
+
+  # ─── Auth API ──────────────────────────────────────────────
+  - type: web
+    name: spendsmart-auth
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Auth.API/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false  # Set to Neon.tech PostgreSQL connection string
+      - key: Jwt__Secret
+        sync: false  # Set to a strong secret key
+
+  # ─── Category API ──────────────────────────────────────────
+  - type: web
+    name: spendsmart-category
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Category.API/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Secret
+        sync: false
+
+  # ─── Expense API ───────────────────────────────────────────
+  - type: web
+    name: spendsmart-expense
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Expense.API/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Secret
+        sync: false
+
+  # ─── Income API ────────────────────────────────────────────
+  - type: web
+    name: spendsmart-income
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Income.API/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Secret
+        sync: false
+
+  # ─── Budget API ────────────────────────────────────────────
+  - type: web
+    name: spendsmart-budget
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Budget.API/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Secret
+        sync: false
+
+  # ─── Report API ────────────────────────────────────────────
+  - type: web
+    name: spendsmart-report
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Report.API/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Secret
+        sync: false
+
+  # ─── Notification API ──────────────────────────────────────
+  - type: web
+    name: spendsmart-notification
+    runtime: docker
+    dockerfilePath: ./SpendSmart.Notification.API/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Secret
+        sync: false
