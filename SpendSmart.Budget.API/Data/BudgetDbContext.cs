@@ -17,10 +17,10 @@ namespace SpendSmart.Budget.API.Data
             modelBuilder.Entity<BudgetEntity>()
                 .HasIndex(b => new { b.UserId, b.CategoryId })
                 .IsUnique()
-                .HasFilter("[IsActive] = 1");
+                .HasFilter("\"IsActive\" = true");
                 
-            modelBuilder.Entity<BudgetEntity>().Property(b => b.LimitAmount).HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<BudgetEntity>().Property(b => b.SpentAmount).HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<BudgetEntity>().Property(b => b.LimitAmount).HasColumnType("numeric(18,2)");
+            modelBuilder.Entity<BudgetEntity>().Property(b => b.SpentAmount).HasColumnType("numeric(18,2)");
         }
     }
 }

@@ -19,7 +19,7 @@ namespace SpendSmart.Expense.API.Data
                 
             modelBuilder.Entity<Entities.Expense>()
                 .Property(e => e.Amount)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
         }
     }
 }
