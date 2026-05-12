@@ -59,7 +59,9 @@ try
         var context = scope.ServiceProvider.GetRequiredService<BudgetDbContext>();
         
         Console.WriteLine("[DB] Ensuring database is created...");
-        context.Database.EnsureCreated();
+        var databaseCreator = context.Database.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>();
+        try { databaseCreator.EnsureCreated(); } catch { }
+        try { databaseCreator.CreateTables(); } catch { }
 
         Console.WriteLine("[DB] Running schema patch for 'UpdatedAt' column...");
         var sql = @"

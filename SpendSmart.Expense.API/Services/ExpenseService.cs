@@ -37,7 +37,7 @@ namespace SpendSmart.Expense.API.Services
             try
             {
                 var client = _httpClientFactory.CreateClient();
-                await client.PostAsJsonAsync("http://localhost:5005/api/budgets/internal/check", new
+                await client.PostAsJsonAsync("https://spendsmart-budget.onrender.com/api/budgets/internal/check", new
                 {
                     UserId = userId,
                     CategoryId = categoryId,

@@ -16,8 +16,8 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddHttpClient("ExpenseApi", client =>
 {
-    // Hit Expense API directly on port 5003 to avoid re-entry issues
-    client.BaseAddress = new Uri("http://localhost:5003"); 
+    // Hit Expense API directly on public Render URL
+    client.BaseAddress = new Uri("https://spendsmart-expense.onrender.com"); 
 });
 
 
@@ -52,7 +52,9 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var context = scope.ServiceProvider.GetRequiredService<IncomeDbContext>();
-        context.Database.EnsureCreated();
+        var databaseCreator = context.Database.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>();
+        try { databaseCreator.EnsureCreated(); } catch { }
+        try { databaseCreator.CreateTables(); } catch { }
     }
 }
 catch (Exception ex)

@@ -58,7 +58,9 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var context = scope.ServiceProvider.GetRequiredService<ExpenseDbContext>();
-        context.Database.EnsureCreated();
+        var databaseCreator = context.Database.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>();
+        try { databaseCreator.EnsureCreated(); } catch { }
+        try { databaseCreator.CreateTables(); } catch { }
     }
 }
 catch (Exception ex)
