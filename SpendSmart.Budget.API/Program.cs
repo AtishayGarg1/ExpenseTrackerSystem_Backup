@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using SpendSmart.Budget.API.Data;
 using SpendSmart.Budget.API.Repositories;
 using SpendSmart.Budget.API.Services;
