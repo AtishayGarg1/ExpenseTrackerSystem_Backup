@@ -20,7 +20,7 @@ export interface Expense {
   providedIn: 'root'
 })
 export class ExpenseService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl + '/expenses';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl; // Gateway URL
+  private apiUrl = environment.apiUrl + '/users'; // Gateway URL
 
   constructor(private http: HttpClient) {}
 

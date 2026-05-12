@@ -21,7 +21,7 @@ export interface Budget {
   providedIn: 'root'
 })
 export class BudgetService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl + '/budgets';
 
   constructor(private http: HttpClient) {}
 

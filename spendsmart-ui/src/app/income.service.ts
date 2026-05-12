@@ -19,7 +19,7 @@ export interface Income {
   providedIn: 'root'
 })
 export class IncomeService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl + '/incomes';
 
   constructor(private http: HttpClient) {}
 
